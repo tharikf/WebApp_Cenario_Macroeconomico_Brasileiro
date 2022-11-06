@@ -1,0 +1,12 @@
+
+
+#app-title > * {
+    color: rgb(255, 255, 255);
+    margin: 0;
+    padding: 0;
+}
+
+.card {
+    margin: 10px 3px 30px 5px;
+    min-width: auto;
+}
