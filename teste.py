@@ -108,40 +108,57 @@ sidebar = html.Div(
 )
 
 # Area de plotagem
-card_content = [
-    dbc.CardHeader("Card header"),
+pib_content = [
+    dbc.CardHeader('PIB'),
     dbc.CardBody(
         [
-            html.H5("Card title", className="card-title"),
+            html.H5('PIB 2022', className = 'card-title'),
             html.P(
-                "This is some card content that we'll reuse",
-                className="card-text",
+                'Aqui estarão as infomações do PIB do Brasil!',
+                className = 'card-text',
             ),
         ]
     ),
 ]
 
-area_pib = html.Div(
-    [
-        dbc.Row(
-            [
-                dbc.Col(dbc.Card(card_content)),
-                dbc.Col(dbc.Card(card_content)),
-            ],
-            className = "w-75 mb-4",
-        ),
+inflacao_content = [
+    dbc.CardHeader('Inflação'),
+    dbc.CardBody(
+        [
+            html.H5('Inflação 2022', className = 'card-title'),
+            html.P(
+                'Aqui estarão as infomações de inflação do Brasil!',
+                className = 'card-text',
+            ),
+        ]
+    ),
+]
 
-        dbc.Row(
-            [
-                dbc.Col(dbc.Card(card_content)),
-                dbc.Col(dbc.Card(card_content)),
-            ],
-            className = "w-75 mb-4",
-        ),
-    ]
-)
-                    
+juros_content = [
+    dbc.CardHeader('Taxa de Juros'),
+    dbc.CardBody(
+        [
+            html.H5('Taxa de Juros 2022', className = 'card-title'),
+            html.P(
+                'Aqui estarão as infomações de taxa de juros do Brasil!',
+                className = 'card-text',
+            ),
+        ]
+    ),
+]
 
+desemprego_content = [
+    dbc.CardHeader('Desemprego'),
+    dbc.CardBody(
+        [
+            html.H5('Desemprego 2022', className = 'card-title'),
+            html.P(
+                'Aqui estarão as infomações de taxa de desemprego do Brasil!',
+                className = 'card-text',
+            ),
+        ]
+    ),
+]
 
 
 
@@ -151,15 +168,12 @@ app.layout = html.Div(
         header,
         dbc.Container(
             [
-                dbc.Row(sidebar),
+                dbc.Row(
+                    sidebar
+                    ),
             ],
             fluid = True,
         ),
-        dbc.Container(
-            [
-                dbc.Row(area_pib),
-            ]
-        )
     ],
 )
 
