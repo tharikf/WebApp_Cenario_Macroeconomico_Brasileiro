@@ -10,13 +10,19 @@ import datetime
 from bcb import sgs
 from bcb import currency
 from bcb import Expectativas
-import matplotlib.pyplot as plt
-import seaborn as sns
 import yfinance as yf
+
+
 
 
 # Estilo
 external_stylesheets = [dbc.themes.BOOTSTRAP, 'seg-style.css']
+
+app = Dash(__name__, external_stylesheets = external_stylesheets)
+server = app.server
+
+# Titulo da Aplicacao
+app.title = 'Cenário Macroeconômico do Brasil'
 
 # Font and background colors associated with each theme
 text_color = {"dark": "#95969A", "light": "#595959"}
@@ -83,10 +89,6 @@ DIV_23_STYLE = {
     'display' : 'inline-block',
 }
 
-app = Dash(__name__, external_stylesheets = external_stylesheets)
-
-# Titulo da Aplicacao
-app.title = 'Cenário Macroeconômico do Brasil'
 
 # Header
 header = dbc.Navbar(
