@@ -4,3 +4,4 @@ dash==2.7.0
 plotly==5.11.0
 python-bcb==0.1.8
 yfinance==0.1.84
+gunicorn==20.1.0
