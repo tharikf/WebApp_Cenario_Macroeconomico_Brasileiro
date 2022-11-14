@@ -169,7 +169,7 @@ df_pib = df_pib.reset_index()
 
 pib_figure = go.Figure()
 pib_figure = px.line(x = df_pib['Date'], y = df_pib['ibcbr'], color_discrete_sequence = ['#1E3685'], template = 'plotly_white')
-pib_figure.update_layout(title = 'Série Temporal do IBC-BR', title_x = 0.5, xaxis_title = '', yaxis_title = '')
+pib_figure.update_layout(title = '', title_x = 0.5, xaxis_title = '', yaxis_title = 'IBC-BR')
 # Finalizando PIB #
 
 # Inflacao (IPCA) #
@@ -280,7 +280,7 @@ df_desemprego = sgs.get({'desemp_pnadc' : 24369}, start = '2022-01-01')
 df_desemprego = df_desemprego.reset_index()
 desemprego_figure = px.line(x = df_desemprego['Date'], y = df_desemprego['desemp_pnadc'], color_discrete_sequence = ['#1E3685'],
                             template = 'plotly_white')
-desemprego_figure.update_layout(title = 'Série Temporal do Desemprego', title_x = 0.5, xaxis_title = '',
+desemprego_figure.update_layout(title = '', title_x = 0.5, xaxis_title = '',
                                 yaxis_title = 'Taxa de Desemprego')
 
 # Finalizando Desemprego #
@@ -310,7 +310,7 @@ libra_hoje = obtendo_cambio(moedas_busca, inicio, fim)[2]
 dolar_fig = go.Figure()
 dolar_fig.add_trace(go.Indicator(
 mode = 'number',
-number = {'prefix' : 'R$'},
+number = {'prefix' : 'R$', 'valueformat' : '.2f'},
 value = dolar_hoje,
 title = 'Cotação Dólar',
 ))
@@ -318,7 +318,7 @@ title = 'Cotação Dólar',
 euro_fig = go.Figure()
 euro_fig.add_trace(go.Indicator(
 mode = 'number',
-number = {'prefix' : 'R$'},
+number = {'prefix' : 'R$', 'valueformat' : '.2f'},
 value = euro_hoje,
 title = 'Cotação Euro',
 ))
@@ -326,7 +326,7 @@ title = 'Cotação Euro',
 libra_fig = go.Figure()
 libra_fig.add_trace(go.Indicator(
 mode = 'number',
-number = {'prefix' : 'R$'},
+number = {'prefix' : 'R$', 'valueformat' : '.2f'},
 value = libra_hoje,
 title = 'Cotação Libra Esterlina',
 ))

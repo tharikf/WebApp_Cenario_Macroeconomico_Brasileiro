@@ -10,6 +10,7 @@ import datetime
 from bcb import sgs
 from bcb import currency
 from bcb import Expectativas
+from decimal import *
 
 ##### PAGINA PIB #####
 
@@ -112,7 +113,6 @@ def unindo_prev(x):
     for trimestre in trimestres:
         df_aux = x[(x['DataReferencia'] == trimestre)]
         dicio_metricas['media_{}'.format(trimestre)] = df_aux['Media'].mean()
-        dicio_metricas['mediana_{}'.format(trimestre)] = df_aux['Mediana'].mean()
         dicio_metricas['maximo_{}'.format(trimestre)] = df_aux['Maximo'].mean()
         dicio_metricas['minimo_{}'.format(trimestre)] = df_aux['Minimo'].mean()
     
@@ -122,9 +122,10 @@ def unindo_prev(x):
     df[['metrica', 'trimestres']] = df['metrica_trimestre'].str.split('_', n = 1, expand = True)
     df = df.drop(columns = 'metrica_trimestre')
     df = df[['trimestres', 'metrica', 'valor']]
-    df['metrica'] = np.where(df['metrica'] == 'maximo', 'Máximo',
-                              np.where(df['metrica'] == 'media', 'Média',
-                                       np.where(df['metrica'] == 'minimo', 'Mínimo', 'Mediana')))
+    df.columns = ['Trimestres', 'Métrica', 'Valor']
+    df['Valor'] = round(df['Valor'], 2)
+    df['Métrica'] = np.where(df['Métrica'] == 'maximo', 'Máximo',
+                              np.where(df['Métrica'] == 'media', 'Média', 'Mínimo'))
     
     return df
 
@@ -147,7 +148,6 @@ def unindo_desemprego(x):
     for ano in df_aux['DataReferencia']:
         df_aux = x[(x['DataReferencia'] == ano)]
         dicio_metricas['media_{}'.format(ano)] = df_aux['Media'].mean()
-        dicio_metricas['mediana_{}'.format(ano)] = df_aux['Mediana'].mean()
         dicio_metricas['maximo_{}'.format(ano)] = df_aux['Maximo'].mean()
         dicio_metricas['minimo_{}'.format(ano)] = df_aux['Minimo'].mean()
     
@@ -157,20 +157,20 @@ def unindo_desemprego(x):
     df[['metrica', 'anos']] = df['metrica_trimestre'].str.split('_', n = 1, expand = True)
     df = df.drop(columns = 'metrica_trimestre')
     df = df[['anos', 'metrica', 'valor']]
-    
-    df['metrica'] = np.where(df['metrica'] == 'maximo', 'Máximo',
-                              np.where(df['metrica'] == 'media', 'Média',
-                                       np.where(df['metrica'] == 'minimo', 'Mínimo', 'Mediana')))
+    df.columns = ['Anos', 'Métrica', 'Valor']
+    df['Valor'] = round(df['Valor'], 2)
+    df['Métrica'] = np.where(df['Métrica'] == 'maximo', 'Máximo',
+                              np.where(df['Métrica'] == 'media', 'Média', 'Mínimo'))
     
     return df
 
 df_desemprego_anual = unindo_desemprego(desemprego_total)
 
-fig_prev_desemp_anual = px.bar(df_desemprego_anual, x = 'metrica', y = 'valor', color = 'anos', barmode = 'group',
+fig_prev_desemp_anual = px.bar(df_desemprego_anual, x = 'Métrica', y = 'Valor', color = 'Anos', barmode = 'group',
                         color_discrete_sequence = ['#03198E', '#04890A'], template = 'plotly_white')
 
 fig_prev_desemp_anual.update_layout(title = '', title_x = 0.5, xaxis_title = '', yaxis_title = '',
-                           legend_title = 'Métricas', yaxis = dict(dtick = 1))
+                           legend_title = 'Anos', yaxis = dict(dtick = 1))
 
 fig_prev_desemp_anual.update_yaxes(range = (0, 12), constrain = 'domain', ticksuffix = '%')
 # Finalizado Desemprego Anual
@@ -180,8 +180,8 @@ desemprego_total_tri = obtendo_expectativas('Taxa de desocupação', entidade_tr
 
 desemprego_total_tri_df = unindo_prev(desemprego_total_tri)
 
-fig_prev_desemp_tri = px.bar(desemprego_total_tri_df, x = 'trimestres', y = 'valor', color = 'metrica', barmode = 'group',
-                        color_discrete_sequence = ['#560699', '#069099', '#080699', '#E41006'], template = 'plotly_white')
+fig_prev_desemp_tri = px.bar(desemprego_total_tri_df, x = 'Trimestres', y = 'Valor', color = 'Métrica', barmode = 'group',
+                        color_discrete_sequence = ['#560699', '#080699', '#E41006'], template = 'plotly_white')
 
 fig_prev_desemp_tri.update_layout(title = '', title_x = 0.5, xaxis_title = '', yaxis_title = '',
                            legend_title = 'Métricas', yaxis = dict(dtick = 1))
@@ -195,9 +195,8 @@ fig_prev_desemp_tri.update_yaxes(range = (0, 13), constrain = 'domain', ticksuff
 pib_total = obtendo_expectativas('PIB Total', entidade_trimestrais, 30)
 df_previsoes_pib = unindo_prev(pib_total)
 
-fig_prev_pib = px.bar(df_previsoes_pib, x = 'trimestres', y = 'valor', color = 'metrica', barmode = 'group',
-                        color_discrete_sequence = ['#560699', '#069099', '#080699', '#E41006'], template = 'plotly_white')
-
+fig_prev_pib = px.bar(df_previsoes_pib, x = 'Trimestres', y = 'Valor', color = 'Métrica', barmode = 'group',
+                        color_discrete_sequence = ['#560699', '#080699', '#E41006'], template = 'plotly_white')
 fig_prev_pib.update_layout(title = '', title_x = 0.5, xaxis_title = '', yaxis_title = '',
                            legend_title = 'Métricas', yaxis = dict(dtick = 1))
 fig_prev_pib.update_yaxes(range = (-5, 5), constrain = 'domain', ticksuffix = '%')

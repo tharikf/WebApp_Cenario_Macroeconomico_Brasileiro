@@ -90,7 +90,7 @@ def obtendo_expectativas(indicador, entidade, respondentes):
     df_ep = ep.query().filter(ep.Indicador == indicador,
                               ep.Data >= tres_meses,
                               ep.numeroRespondentes >= respondentes).select(ep.Data, ep.DataReferencia,
-                                                           ep.Media, ep.Mediana, ep.Minimo, ep.Maximo, ep.Indicador).collect()
+                                                           ep.Media, ep.Minimo, ep.Maximo, ep.Indicador).collect()
 
     return df_ep
 
@@ -110,7 +110,6 @@ def unindo_cambio(x):
     for ano in df_aux['DataReferencia']:
         df_aux = x[(x['DataReferencia'] == ano)]
         dicio_metricas['media_{}'.format(ano)] = df_aux['Media'].mean()
-        dicio_metricas['mediana_{}'.format(ano)] = df_aux['Mediana'].mean()
         dicio_metricas['maximo_{}'.format(ano)] = df_aux['Maximo'].mean()
         dicio_metricas['minimo_{}'.format(ano)] = df_aux['Minimo'].mean()
     
@@ -120,16 +119,16 @@ def unindo_cambio(x):
     df[['metrica', 'anos']] = df['metrica_trimestre'].str.split('_', n = 1, expand = True)
     df = df.drop(columns = 'metrica_trimestre')
     df = df[['anos', 'metrica', 'valor']]
-    
-    df['metrica'] = np.where(df['metrica'] == 'maximo', 'Máximo',
-                              np.where(df['metrica'] == 'media', 'Média',
-                                       np.where(df['metrica'] == 'minimo', 'Mínimo', 'Mediana')))
+    df.columns = ['Anos', 'Métrica', 'Valor']
+    df['Valor'] = round(df['Valor'], 2)
+    df['Métrica'] = np.where(df['Métrica'] == 'maximo', 'Máximo',
+                              np.where(df['Métrica'] == 'media', 'Média', 'Mínimo'))
     
     return df
 
 df_cambio_total = unindo_cambio(cambio_total)
 
-fig_prev_cambio = px.bar(df_cambio_total, x = 'metrica', y = 'valor', color = 'anos', barmode = 'group',
+fig_prev_cambio = px.bar(df_cambio_total, x = 'Métrica', y = 'Valor', color = 'Anos', barmode = 'group',
                         color_discrete_sequence = ['#03198E', '#04890A'], template = 'plotly_white')
 
 fig_prev_cambio.update_layout(title = '', title_x = 0.5, xaxis_title = '', yaxis_title = '',
@@ -152,7 +151,6 @@ def unindo_cambio_tri(x):
     for trimestre in trimestres:
         df_aux = x[(x['DataReferencia'] == trimestre)]
         dicio_metricas['media_{}'.format(trimestre)] = df_aux['Media'].mean()
-        dicio_metricas['mediana_{}'.format(trimestre)] = df_aux['Mediana'].mean()
         dicio_metricas['maximo_{}'.format(trimestre)] = df_aux['Maximo'].mean()
         dicio_metricas['minimo_{}'.format(trimestre)] = df_aux['Minimo'].mean()
     
@@ -162,15 +160,17 @@ def unindo_cambio_tri(x):
     df[['metrica', 'trimestres']] = df['metrica_trimestre'].str.split('_', n = 1, expand = True)
     df = df.drop(columns = 'metrica_trimestre')
     df = df[['trimestres', 'metrica', 'valor']]
-    df['metrica'] = np.where(df['metrica'] == 'maximo', 'Máximo',
-                              np.where(df['metrica'] == 'media', 'Média',
-                                       np.where(df['metrica'] == 'minimo', 'Mínimo', 'Mediana')))
+    df.columns = ['Trimestres', 'Métrica', 'Valor']
+    df['Valor'] = round(df['Valor'], 2)
+    df['Métrica'] = np.where(df['Métrica'] == 'maximo', 'Máximo',
+                              np.where(df['Métrica'] == 'media', 'Média', 'Mínimo'))
     
     return df
+
 df_cambio_trim = unindo_cambio_tri(cambio_trim)
 
-fig_cambio_trim = px.bar(df_cambio_trim, x = 'trimestres', y = 'valor', color = 'metrica', barmode = 'group',
-                        color_discrete_sequence = ['#560699', '#069099', '#080699', '#E41006'], template = 'plotly_white')
+fig_cambio_trim = px.bar(df_cambio_trim, x = 'Trimestres', y = 'Valor', color = 'Métrica', barmode = 'group',
+                        color_discrete_sequence = ['#560699', '#080699', '#E41006'], template = 'plotly_white')
 
 fig_cambio_trim.update_layout(title = '', title_x = 0.5, xaxis_title = '', yaxis_title = '',
                            legend_title = 'Métricas')
@@ -190,7 +190,7 @@ def obtendo_expectativas_comercio(indicador, entidade, respondentes):
     df_ep = ep.query().filter(ep.Indicador == indicador,
                               ep.Data >= tres_meses,
                               ep.numeroRespondentes >= respondentes).select(ep.Data, ep.DataReferencia,
-                                                           ep.Media, ep.Mediana, ep.Minimo, ep.Maximo, ep.Indicador, ep.IndicadorDetalhe).collect()
+                                                           ep.Media, ep.Minimo, ep.Maximo, ep.Indicador, ep.IndicadorDetalhe).collect()
 
     return df_ep
 
@@ -210,7 +210,6 @@ def unindo_bc(x, detalhe):
     for ano in df_aux['DataReferencia']:
         df_aux = x[(x['DataReferencia'] == ano)]
         dicio_metricas['media_{}'.format(ano)] = df_aux['Media'].mean()
-        dicio_metricas['mediana_{}'.format(ano)] = df_aux['Mediana'].mean()
         dicio_metricas['maximo_{}'.format(ano)] = df_aux['Maximo'].mean()
         dicio_metricas['minimo_{}'.format(ano)] = df_aux['Minimo'].mean()
     
@@ -220,10 +219,10 @@ def unindo_bc(x, detalhe):
     df[['metrica', 'anos']] = df['metrica_trimestre'].str.split('_', n = 1, expand = True)
     df = df.drop(columns = 'metrica_trimestre')
     df = df[['anos', 'metrica', 'valor']]
-    
-    df['metrica'] = np.where(df['metrica'] == 'maximo', 'Máximo',
-                              np.where(df['metrica'] == 'media', 'Média',
-                                       np.where(df['metrica'] == 'minimo', 'Mínimo', 'Mediana')))
+    df.columns = ['Anos', 'Métrica', 'Valor']
+    df['Valor'] = round(df['Valor'], 2)
+    df['Métrica'] = np.where(df['Métrica'] == 'maximo', 'Máximo',
+                              np.where(df['Métrica'] == 'media', 'Média', 'Mínimo'))
     
     return df
 
@@ -231,7 +230,7 @@ exportacoes_df = unindo_bc(comercio_total, 'Exportações')
 importacoes_df = unindo_bc(comercio_total, 'Importações')
 saldo_df = unindo_bc(comercio_total, 'Saldo')
 
-fig_prev_expor = px.bar(exportacoes_df, x = 'metrica', y = 'valor', color = 'anos', barmode = 'group',
+fig_prev_expor = px.bar(exportacoes_df, x = 'Métrica', y = 'Valor', color = 'Anos', barmode = 'group',
                         color_discrete_sequence = ['#03198E', '#04890A'], template = 'plotly_white')
 
 fig_prev_expor.update_layout(title = '<br><sup>Valores em Bilhões</sup>', title_x = 0.0, xaxis_title = '', yaxis_title = '',
@@ -239,14 +238,14 @@ fig_prev_expor.update_layout(title = '<br><sup>Valores em Bilhões</sup>', title
 
 fig_prev_expor.update_yaxes(range = (0, 450), constrain = 'domain', tickprefix = 'R$')
 
-fig_prev_impor = px.bar(importacoes_df, x = 'metrica', y = 'valor', color = 'anos', barmode = 'group',
+fig_prev_impor = px.bar(importacoes_df, x = 'Métrica', y = 'Valor', color = 'Anos', barmode = 'group',
                         color_discrete_sequence = ['#03198E', '#04890A'], template = 'plotly_white')
 
 fig_prev_impor.update_layout(title = '<br><sup>Valores em Bilhões</sup>', title_x = 0.0, xaxis_title = '', yaxis_title = '',
                            legend_title = 'Métricas')
 fig_prev_impor.update_yaxes(range = (0, 350), constrain = 'domain', tickprefix = 'R$')
 
-fig_prev_saldo = px.bar(saldo_df, x = 'metrica', y = 'valor', color = 'anos', barmode = 'group',
+fig_prev_saldo = px.bar(saldo_df, x = 'Métrica', y = 'Valor', color = 'Anos', barmode = 'group',
                         color_discrete_sequence = ['#03198E', '#04890A'], template = 'plotly_white')
 
 fig_prev_saldo.update_layout(title = '<br><sup>Valores em Bilhões</sup>', title_x = 0.0, xaxis_title = '', yaxis_title = '',

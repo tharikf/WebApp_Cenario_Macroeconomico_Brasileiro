@@ -3,7 +3,7 @@ from dash import html, dcc
 from dash.dependencies import Input, Output
 
 # Connect to main app.py file
-from app import app, server
+from app import app
 
 # Connect to your app pages
 from pages import page1, page2, page3, page4
@@ -45,7 +45,7 @@ def display_page(pathname):
 
 # Run the app on localhost:8050
 if __name__ == '__main__':
-    app.run_server(debug = False)
+    app.run_server(debug = False, port=8000, host='0.0.0.0')
 
 
 

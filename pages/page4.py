@@ -72,7 +72,7 @@ def obtendo_expectativas(indicador, entidade, respondentes):
     df_ep = ep.query().filter(ep.Indicador == indicador,
                               ep.Data >= tres_meses,
                               ep.numeroRespondentes >= respondentes).select(ep.Data, ep.DataReferencia,
-                                                           ep.Media, ep.Mediana, ep.Minimo, ep.Maximo,
+                                                           ep.Media, ep.Minimo, ep.Maximo,
                                                            ep.Indicador).collect()
 
     return df_ep
@@ -93,7 +93,6 @@ def unindo_gov(x):
     for ano in df_aux['DataReferencia']:
         df_aux = x[(x['DataReferencia'] == ano)]
         dicio_metricas['media_{}'.format(ano)] = df_aux['Media'].mean()
-        dicio_metricas['mediana_{}'.format(ano)] = df_aux['Mediana'].mean()
         dicio_metricas['maximo_{}'.format(ano)] = df_aux['Maximo'].mean()
         dicio_metricas['minimo_{}'.format(ano)] = df_aux['Minimo'].mean()
     
@@ -103,17 +102,17 @@ def unindo_gov(x):
     df[['metrica', 'anos']] = df['metrica_ano'].str.split('_', n = 1, expand = True)
     df = df.drop(columns = 'metrica_ano')
     df = df[['anos', 'metrica', 'valor']]
-    
-    df['metrica'] = np.where(df['metrica'] == 'maximo', 'Máximo',
-                              np.where(df['metrica'] == 'media', 'Média',
-                                       np.where(df['metrica'] == 'minimo', 'Mínimo', 'Mediana')))
+    df.columns = ['Anos', 'Métrica', 'Valor']
+    df['Valor'] = round(df['Valor'], 2)
+    df['Métrica'] = np.where(df['Métrica'] == 'maximo', 'Máximo',
+                              np.where(df['Métrica'] == 'media', 'Média', 'Mínimo'))
     
     return df
 
 div_bruta_df = unindo_gov(div_bruta_total)
 
-fig_div_bruta = px.bar(div_bruta_df, x = 'anos', y = 'valor', color = 'metrica', barmode = 'group',
-                        color_discrete_sequence = ['#560699', '#069099', '#080699', '#E41006'], template = 'plotly_white')
+fig_div_bruta = px.bar(div_bruta_df, x = 'Anos', y = 'Valor', color = 'Métrica', barmode = 'group',
+                        color_discrete_sequence = ['#560699', '#080699', '#E41006'], template = 'plotly_white')
 
 fig_div_bruta.update_layout(title = '<br><sup>Valores em Porcentagem do PIB</sup>', title_x = 0.0, xaxis_title = '', yaxis_title = '',
                            legend_title = 'Métricas', yaxis = dict(tick0 = 0, dtick = 10))
@@ -124,8 +123,8 @@ fig_div_bruta.update_yaxes(range = (0, 100), constrain = 'domain', ticksuffix = 
 div_liquida_total = obtendo_expectativas('Dívida líquida do setor público', entidade_anuais, 10)
 div_liquida_df = unindo_gov(div_liquida_total)
 
-fig_div_liquida = px.bar(div_liquida_df, x = 'anos', y = 'valor', color = 'metrica', barmode = 'group',
-                        color_discrete_sequence = ['#560699', '#069099', '#080699', '#E41006'], template = 'plotly_white')
+fig_div_liquida = px.bar(div_liquida_df, x = 'Anos', y = 'Valor', color = 'Métrica', barmode = 'group',
+                        color_discrete_sequence = ['#560699', '#080699', '#E41006'], template = 'plotly_white')
 
 fig_div_liquida.update_layout(title = '<br><sup>Valores em Porcentagem do PIB</sup>', title_x = 0.0, xaxis_title = '', yaxis_title = '',
                            legend_title = 'Métricas', yaxis = dict(tick0 = 0, dtick = 10))
@@ -136,8 +135,8 @@ fig_div_liquida.update_yaxes(range = (0, 100), constrain = 'domain', ticksuffix 
 primario_total = obtendo_expectativas('Resultado primário', entidade_anuais, 10)
 primario_df = unindo_gov(primario_total)
 
-fig_primario = px.bar(primario_df, x = 'anos', y = 'valor', color = 'metrica', barmode = 'group',
-                        color_discrete_sequence = ['#560699', '#069099', '#080699', '#E41006'], template = 'plotly_white')
+fig_primario = px.bar(primario_df, x = 'Anos', y = 'Valor', color = 'Métrica', barmode = 'group',
+                        color_discrete_sequence = ['#560699', '#080699', '#E41006'], template = 'plotly_white')
 
 fig_primario.update_layout(title = '<br><sup>Valores em Porcentagem do PIB</sup>', title_x = 0.0, xaxis_title = '', yaxis_title = '',
                            legend_title = 'Métricas', yaxis = dict(dtick = 0.3))
@@ -149,8 +148,8 @@ fig_primario.update_yaxes(range = (-1.5, 1.5), constrain = 'domain', ticksuffix 
 nominal_total = obtendo_expectativas('Resultado nominal', entidade_anuais, 10)
 nominal_df = unindo_gov(nominal_total)
 
-fig_nominal = px.bar(nominal_df, x = 'anos', y = 'valor', color = 'metrica', barmode = 'group',
-                        color_discrete_sequence = ['#560699', '#069099', '#080699', '#E41006'], template = 'plotly_white')
+fig_nominal = px.bar(nominal_df, x = 'Anos', y = 'Valor', color = 'Métrica', barmode = 'group',
+                        color_discrete_sequence = ['#560699', '#080699', '#E41006'], template = 'plotly_white')
 
 fig_nominal.update_layout(title = '<br><sup>Valores em Porcentagem do PIB</sup>', title_x = 0.0, xaxis_title = '', yaxis_title = '',
                            legend_title = 'Métricas', yaxis = dict(dtick = 1))
@@ -162,8 +161,8 @@ fig_nominal.update_yaxes(range = (-10, 0), constrain = 'domain', ticksuffix = '%
 invest_total = obtendo_expectativas('Investimento direto no país', entidade_anuais, 10)
 invest_total_df = unindo_gov(invest_total)
 
-fig_invest = px.bar(invest_total_df, x = 'anos', y = 'valor', color = 'metrica', barmode = 'group',
-                        color_discrete_sequence = ['#560699', '#069099', '#080699', '#E41006'], template = 'plotly_white')
+fig_invest = px.bar(invest_total_df, x = 'Anos', y = 'Valor', color = 'Métrica', barmode = 'group',
+                        color_discrete_sequence = ['#560699', '#080699', '#E41006'], template = 'plotly_white')
 
 fig_invest.update_layout(title = '<br><sup>Valores em Bilhões</sup>', title_x = 0.0, xaxis_title = '', yaxis_title = '',
                            legend_title = 'Métricas', yaxis = dict(tick0 = 0, dtick = 10))
@@ -174,8 +173,8 @@ fig_invest.update_yaxes(range = (0, 100), constrain = 'domain', tickprefix = 'R$
 conta_corrente = obtendo_expectativas('Conta corrente', entidade_anuais, 10)
 conta_corrente_df = unindo_gov(conta_corrente)
 
-fig_conta = px.bar(conta_corrente_df, x = 'anos', y = 'valor', color = 'metrica', barmode = 'group',
-                        color_discrete_sequence = ['#560699', '#069099', '#080699', '#E41006'], template = 'plotly_white')
+fig_conta = px.bar(conta_corrente_df, x = 'Anos', y = 'Valor', color = 'Métrica', barmode = 'group',
+                        color_discrete_sequence = ['#560699', '#080699', '#E41006'], template = 'plotly_white')
 
 fig_conta.update_layout(title = '<br><sup>Valores em Bilhões</sup>', title_x = 0.0, xaxis_title = '', yaxis_title = '',
                            legend_title = 'Métricas')

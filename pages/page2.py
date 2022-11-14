@@ -95,7 +95,6 @@ def unindo_prev(x):
     for trimestre in trimestres:
         df_aux = x[(x['DataReferencia'] == trimestre)]
         dicio_metricas['media_{}'.format(trimestre)] = df_aux['Media'].mean()
-        dicio_metricas['mediana_{}'.format(trimestre)] = df_aux['Mediana'].mean()
         dicio_metricas['maximo_{}'.format(trimestre)] = df_aux['Maximo'].mean()
         dicio_metricas['minimo_{}'.format(trimestre)] = df_aux['Minimo'].mean()
     
@@ -105,9 +104,10 @@ def unindo_prev(x):
     df[['metrica', 'trimestres']] = df['metrica_trimestre'].str.split('_', n = 1, expand = True)
     df = df.drop(columns = 'metrica_trimestre')
     df = df[['trimestres', 'metrica', 'valor']]
-    df['metrica'] = np.where(df['metrica'] == 'maximo', 'Máximo',
-                              np.where(df['metrica'] == 'media', 'Média',
-                                       np.where(df['metrica'] == 'minimo', 'Mínimo', 'Mediana')))
+    df.columns = ['Trimestres', 'Métrica', 'Valor']
+    df['Valor'] = round(df['Valor'], 2)
+    df['Métrica'] = np.where(df['Métrica'] == 'maximo', 'Máximo',
+                              np.where(df['Métrica'] == 'media', 'Média', 'Mínimo'))
     
     return df
 
@@ -129,7 +129,6 @@ def unindo_selic(x):
     for ano in df_aux['DataReferencia']:
         df_aux = x[(x['DataReferencia'] == ano)]
         dicio_metricas['media_{}'.format(ano)] = df_aux['Media'].mean()
-        dicio_metricas['mediana_{}'.format(ano)] = df_aux['Mediana'].mean()
         dicio_metricas['maximo_{}'.format(ano)] = df_aux['Maximo'].mean()
         dicio_metricas['minimo_{}'.format(ano)] = df_aux['Minimo'].mean()
     
@@ -139,16 +138,16 @@ def unindo_selic(x):
     df[['metrica', 'anos']] = df['metrica_trimestre'].str.split('_', n = 1, expand = True)
     df = df.drop(columns = 'metrica_trimestre')
     df = df[['anos', 'metrica', 'valor']]
-    
-    df['metrica'] = np.where(df['metrica'] == 'maximo', 'Máximo',
-                              np.where(df['metrica'] == 'media', 'Média',
-                                       np.where(df['metrica'] == 'minimo', 'Mínimo', 'Mediana')))
+    df.columns = ['Anos', 'Métrica', 'Valor']
+    df['Valor'] = round(df['Valor'], 2)
+    df['Métrica'] = np.where(df['Métrica'] == 'maximo', 'Máximo',
+                              np.where(df['Métrica'] == 'media', 'Média', 'Mínimo'))
     
     return df
 
 selic_total_df = unindo_selic(selic_total)
 
-fig_prev_selic = px.bar(selic_total_df, x = 'metrica', y = 'valor', color = 'anos', barmode = 'group',
+fig_prev_selic = px.bar(selic_total_df, x = 'Métrica', y = 'Valor', color = 'Anos', barmode = 'group',
                         color_discrete_sequence = ['#03198E', '#04890A'], template = 'plotly_white')
 
 fig_prev_selic.update_layout(title = '', title_x = 0.5, xaxis_title = '', yaxis_title = '',
@@ -161,8 +160,8 @@ fig_prev_selic.update_yaxes(range = (0, 16), constrain = 'domain', ticksuffix = 
 ipca_total = obtendo_expectativas('IPCA', entidade_trimestrais, 30)
 df_previsoes_ipca = unindo_prev(ipca_total)
 
-fig_prev_ipca = px.bar(df_previsoes_ipca, x = 'trimestres', y = 'valor', color = 'metrica', barmode = 'group',
-                        color_discrete_sequence = ['#560699', '#069099', '#080699', '#E41006'], template = 'plotly_white')
+fig_prev_ipca = px.bar(df_previsoes_ipca, x = 'Trimestres', y = 'Valor', color = 'Métrica', barmode = 'group',
+                        color_discrete_sequence = ['#560699', '#080699', '#E41006'], template = 'plotly_white')
 
 fig_prev_ipca.update_layout(title = '', title_x = 0.5, xaxis_title = '', yaxis_title = '',
                            legend_title = 'Métricas')
@@ -192,7 +191,7 @@ def ipca_grupos_func(x):
     
     x = x[x['Indicador'].isin(indicadores)]
     x = x[x['DataReferencia'].isin(trimestres)]
-    x_media = x.groupby(['Indicador', 'DataReferencia'], as_index = False)['Media'].mean()
+    x_media = round(x.groupby(['Indicador', 'DataReferencia'], as_index = False)['Media'].mean(), 2)
     x_media['Indicador'] = np.where(x_media['Indicador'] == 'IPCA Bens industrializados', 'IPCA Bens Industrializados',
                                    np.where(x_media['Indicador'] == 'IPCA Alimentação no domicílio','IPCA Alimentação: Domicílio',
                                            x_media['Indicador']))
@@ -210,7 +209,6 @@ ipca_varios_figure = px.bar(df_ipca_grupos, x = 'DataReferencia', y = 'Media',
                                     'IPCA Serviços':'#A41C1C'}, template = 'plotly_white')
 
 ipca_varios_figure.update_layout(title = '', title_x = 0.5, xaxis_title = '', yaxis_title = '', yaxis = dict(dtick = 1))
-#ipca_varios_figure.update_xaxes(categoryorder = 'array', categoryarray= ['4/2022', '1/2023', '2/2023', '3/2023', '4/2023'])
 ipca_varios_figure.update_yaxes(range = (0, 10), constrain = 'domain', ticksuffix = '%')
 # Finalizado IPCA Decompondo Trimestrais #
 
@@ -225,7 +223,7 @@ def ipca_gp_ano_func(x):
 
     x = x[x['Indicador'].isin(indicadores)]
     x = x[x['DataReferencia'].isin(anos)]
-    x_media = x.groupby(['Indicador', 'DataReferencia'], as_index = False)['Media'].mean()
+    x_media = round(x.groupby(['Indicador', 'DataReferencia'], as_index = False)['Media'].mean(), 2)
     x_media['Indicador'] = np.where(x_media['Indicador'] == 'IPCA Bens industrializados', 'IPCA Bens Industrializados',
                                    np.where(x_media['Indicador'] == 'IPCA Alimentação no domicílio','IPCA Alimentação: Domicílio',
                                            x_media['Indicador']))
