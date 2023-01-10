@@ -10,5 +10,6 @@ Além de uma visão sobre o cenário atual, é possível navegar sobre as págin
 
 A aplicação pode ser acessada em https://bacenwebapp.onrender.com/. A hospedagem no site é gratuita e a aplicação é pesada dado que contém cinco páginas com informações. Portanto, demora cerca de 2 minutos para abrir a aplicação pela primeira vez.
 
+![screen-recording-bacen](https://user-images.githubusercontent.com/104634357/211566423-39bdbe58-f20a-4f52-9806-e29761410c15.gif)
 
-![webapp_bacen](https://user-images.githubusercontent.com/104634357/208163233-68affb53-2fcc-4a77-bd8f-b022c7e370c8.jpg)
+
