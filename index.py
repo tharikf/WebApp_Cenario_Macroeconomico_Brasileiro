@@ -43,9 +43,9 @@ def display_page(pathname):
     else: # if redirected to unknown link
         return "404 Page Error! Please choose a link"
 
-# Run the app on localhost:8050
+# Run the app on localhost:8020
 if __name__ == '__main__':
-    app.run_server(debug = False)
+    app.run_server(debug = False, port = 8020, host = '0.0.0.0')
 
 
 
