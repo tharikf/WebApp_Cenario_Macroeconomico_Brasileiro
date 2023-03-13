@@ -87,7 +87,7 @@ def obtendo_expectativas(indicador, entidade, respondentes):
 def unindo_prev(x):
     
     # Selecionando trimestres
-    trimestres = ['4/2022', '1/2023', '2/2023', '3/2023', '4/2023']
+    trimestres = ['1/2023', '2/2023', '3/2023', '4/2023', '1/2024', '2/2024']
     
     # Calculando as metricas
     dicio_metricas = {}
@@ -119,7 +119,7 @@ selic_total = obtendo_expectativas('Selic', entidade_anuais, 30)
 def unindo_selic(x):
     
     # Selecionando trimestres
-    anos = ['2022', '2023']
+    anos = ['2023', '2024']
     
     x = x[x['DataReferencia'].isin(anos)]
     
@@ -187,7 +187,7 @@ def ipca_grupos_func(x):
     indicadores = ['IPCA Administrados', 'IPCA Livres', 'IPCA Alimentação no domicílio',
                    'IPCA Serviços', 'IPCA Bens industrializados']
 
-    trimestres = ['4/2022', '1/2023', '2/2023', '3/2023', '4/2023']
+    trimestres = ['1/2023', '2/2023', '3/2023', '4/2023', '1/2024', '2/2024']
     
     x = x[x['Indicador'].isin(indicadores)]
     x = x[x['DataReferencia'].isin(trimestres)]
@@ -219,7 +219,7 @@ def ipca_gp_ano_func(x):
     indicadores = ['IPCA Administrados', 'IPCA Livres', 'IPCA Alimentação no domicílio',
                    'IPCA Serviços', 'IPCA Bens industrializados']
     
-    anos = ['2022', '2023']
+    anos = ['2023', '2024']
 
     x = x[x['Indicador'].isin(indicadores)]
     x = x[x['DataReferencia'].isin(anos)]
@@ -239,19 +239,11 @@ ipca_gp_anual_figure.update_yaxes(range = (-5, 15), constrain = 'domain', ticksu
 # Finalizando IPCA Decompondo Anuais
 
 # IPCA E IGP-M Anuais #
-ipca_anual_22 = ipca_gp_anual[(ipca_gp_anual['Indicador'] == 'IPCA') & (ipca_gp_anual['DataReferencia'] == '2022')]['Media'].mean()
 ipca_anual_23 = ipca_gp_anual[(ipca_gp_anual['Indicador'] == 'IPCA') & (ipca_gp_anual['DataReferencia'] == '2023')]['Media'].mean()
+ipca_anual_24 = ipca_gp_anual[(ipca_gp_anual['Indicador'] == 'IPCA') & (ipca_gp_anual['DataReferencia'] == '2024')]['Media'].mean()
 
-igpm_anual_22 = ipca_gp_anual[(ipca_gp_anual['Indicador'] == 'IGP-M') & (ipca_gp_anual['DataReferencia'] == '2022')]['Media'].mean()
 igpm_anual_23 = ipca_gp_anual[(ipca_gp_anual['Indicador'] == 'IGP-M') & (ipca_gp_anual['DataReferencia'] == '2023')]['Media'].mean()
-
-ipca_anual_22_figu = go.Figure()
-ipca_anual_22_figu.add_trace(go.Indicator(
-mode = 'number',
-number = {'suffix' : '%', 'valueformat' : '.2f'},
-value = ipca_anual_22,
-title = 'IPCA: 2022',
-))
+igpm_anual_24 = ipca_gp_anual[(ipca_gp_anual['Indicador'] == 'IGP-M') & (ipca_gp_anual['DataReferencia'] == '2024')]['Media'].mean()
 
 ipca_anual_23_figu = go.Figure()
 ipca_anual_23_figu.add_trace(go.Indicator(
@@ -261,12 +253,12 @@ value = ipca_anual_23,
 title = 'IPCA: 2023',
 ))
 
-igpm_anual_22_figu = go.Figure()
-igpm_anual_22_figu.add_trace(go.Indicator(
+ipca_anual_24_figu = go.Figure()
+ipca_anual_24_figu.add_trace(go.Indicator(
 mode = 'number',
 number = {'suffix' : '%', 'valueformat' : '.2f'},
-value = igpm_anual_22,
-title = 'IGP-M: 2022',
+value = ipca_anual_24,
+title = 'IPCA: 2024',
 ))
 
 igpm_anual_23_figu = go.Figure()
@@ -275,6 +267,14 @@ mode = 'number',
 number = {'suffix' : '%', 'valueformat' : '.2f'},
 value = igpm_anual_23,
 title = 'IGP-M: 2023',
+))
+
+igpm_anual_24_figu = go.Figure()
+igpm_anual_24_figu.add_trace(go.Indicator(
+mode = 'number',
+number = {'suffix' : '%', 'valueformat' : '.2f'},
+value = igpm_anual_24,
+title = 'IGP-M: 2024',
 ))
 
 # Finalizando IPCA e IGP-M Anuais #
@@ -332,13 +332,6 @@ inflacao_anuais_ipca_igpm = [
         [
             dbc.Tab(
                 dbc.CardBody(
-                    dcc.Graph(id = 'ipca-2022-card',
-                                figure = ipca_anual_22_figu,
-                                style = {'height' : 300}),
-        ), label = 'IPCA: 2022'
-            ),
-            dbc.Tab(
-                dbc.CardBody(
                     dcc.Graph(id = 'ipca-2023-card',
                                 figure = ipca_anual_23_figu,
                                 style = {'height' : 300}),
@@ -346,10 +339,10 @@ inflacao_anuais_ipca_igpm = [
             ),
             dbc.Tab(
                 dbc.CardBody(
-                    dcc.Graph(id = 'igpm-2022-card',
-                                figure = igpm_anual_22_figu,
+                    dcc.Graph(id = 'ipca-2024-card',
+                                figure = ipca_anual_24_figu,
                                 style = {'height' : 300}),
-        ), label = 'IGP-M: 2022'
+        ), label = 'IPCA: 2024'
             ),
             dbc.Tab(
                 dbc.CardBody(
@@ -357,6 +350,13 @@ inflacao_anuais_ipca_igpm = [
                                 figure = igpm_anual_23_figu,
                                 style = {'height' : 300}),
         ), label = 'IGP-M: 2023'
+            ),
+            dbc.Tab(
+                dbc.CardBody(
+                    dcc.Graph(id = 'igpm-2024-card',
+                                figure = igpm_anual_24_figu,
+                                style = {'height' : 300}),
+        ), label = 'IGP-M: 2024'
             ),
         ]
     )

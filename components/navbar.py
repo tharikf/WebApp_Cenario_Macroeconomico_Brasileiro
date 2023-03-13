@@ -28,7 +28,7 @@ header = dbc.Navbar(
                             html.Div(
                                 [
                                     html.H3('Cenário Macroeconômico do Brasil'),
-                                    html.P('Uma análise atual e previsões para 2023!'),
+                                    html.P('Uma análise atual e previsões para os anos de 2023 e 2024!'),
                                 ],
                                 id = 'app-title',
                                 style = {
@@ -44,10 +44,10 @@ header = dbc.Navbar(
                         [
                             html.Div(
                                 [
-                                    html.P('Essa é uma aplicação com indicadores macroeconômicos brasileiros. '
+                                    html.P('Essa é uma aplicação com indicadores sobre a economia brasileira. '
                                             'Aqui é possível observar indicadores como taxa selic, inflação, câmbio e desemprego. '
-                                            'Além disso, a aplicação conta com previsões das principais instituições financeiras fornecidas do país '
-                                             'compondo as expectativas do COPOM sobre os principais indicadores para o ano de 2023!'),
+                                            'Além disso, a aplicação conta com previsões das principais instituições financeiras do país '
+                                             'compondo as expectativas do COPOM sobre os principais indicadores para o ano de 2023 e 2024!'),
                                 ],
                                 id = 'app-descricao',
                                 style = {

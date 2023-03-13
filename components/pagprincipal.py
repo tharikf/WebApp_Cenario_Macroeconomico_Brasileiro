@@ -178,10 +178,10 @@ inflacao = sgs.get({'ipca' : 433, 'igp-m' : 189, 'inpc' : 188}, start = '2021-01
 def inflacao_ipca_anual(df_inflacao):
     inflacao_df = df_inflacao.copy()
     inflacao_df = inflacao_df.reset_index()
-    inflacao_df = inflacao_df.dropna().tail(13)
+    inflacao_df = inflacao_df.tail(13)
     
     # acumulando IPCA
-    inflacao_ipca = inflacao_df[['Date', 'ipca']]
+    inflacao_ipca = inflacao_df[['Date', 'ipca']].dropna()
     inflacao_ipca = inflacao_ipca.assign(ipca_indice = False)
     for i in inflacao_ipca.loc[1:, 'ipca_indice']:
         inflacao_ipca['ipca_indice'] = (inflacao_ipca['ipca'] / 100) + 1
@@ -193,7 +193,7 @@ def inflacao_ipca_anual(df_inflacao):
     inflacao_12meses_ipca = round((inflacao_12meses_ipca - 1) * 100, 2)
     
     # acumulando IGP-M
-    inflacao_igpm = inflacao_df[['Date', 'igp-m']]
+    inflacao_igpm = inflacao_df[['Date', 'igp-m']].dropna()
     inflacao_igpm = inflacao_igpm.assign(igpm_indice = False)
     for i in inflacao_igpm.loc[1:, 'igpm_indice']:
         inflacao_igpm['igpm_indice'] = (inflacao_igpm['igp-m'] / 100) + 1
@@ -205,7 +205,7 @@ def inflacao_ipca_anual(df_inflacao):
     inflacao_12meses_igpm = round((inflacao_12meses_igpm - 1) * 100, 2)
     
     # acumulando inpc
-    inflacao_inpc = inflacao_df[['Date', 'inpc']]
+    inflacao_inpc = inflacao_df[['Date', 'inpc']].dropna()
     inflacao_inpc = inflacao_inpc.assign(inpc_indice = False)
     for i in inflacao_inpc.loc[1:, 'inpc_indice']:
         inflacao_inpc['inpc_indice'] = (inflacao_inpc['inpc'] / 100) + 1
@@ -226,7 +226,7 @@ inpc_anualizado = inflacao_ipca_anual(inflacao)[2]
 taxas_ipca = go.Figure()
 taxas_ipca.add_trace(go.Indicator(
 mode = 'number',
-number = {'suffix' : '%'},
+number = {'suffix' : '%',  'valueformat' : '.2f'},
 value = ipca_anualizado,
 title = 'IPCA',
 ))
@@ -234,7 +234,7 @@ title = 'IPCA',
 taxas_igpm = go.Figure()
 taxas_igpm.add_trace(go.Indicator(
 mode = 'number',
-number = {'suffix' : '%'},
+number = {'suffix' : '%',  'valueformat' : '.2f'},
 value = igpm_anualizado,
 title = 'IGP-M',
 ))
@@ -242,7 +242,7 @@ title = 'IGP-M',
 taxas_inpc = go.Figure()
 taxas_inpc.add_trace(go.Indicator(
 mode = 'number',
-number = {'suffix' : '%'},
+number = {'suffix' : '%', 'valueformat' : '.2f'},
 value = inpc_anualizado,
 title = 'INPC',
 ))
@@ -250,12 +250,12 @@ title = 'INPC',
 
 # Juros (Selic e TJLP) #
 # Selic
-tx_selic = sgs.get({'selic' : 432}, start = '2022-01-01')
+tx_selic = sgs.get({'selic' : 432}, start = '2023-01-01')
 tx_selic = tx_selic.reset_index()
 selic_atual = tx_selic['selic'].tail(1).item()
 
 #TJLP
-tx_tjlp = sgs.get({'tjlp' : 256}, start = '2022-01-01')
+tx_tjlp = sgs.get({'tjlp' : 256}, start = '2023-01-01')
 juros_LP = tx_tjlp['tjlp'].tail(1).item()
 
 taxa_selic = go.Figure()

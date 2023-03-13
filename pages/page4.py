@@ -83,7 +83,7 @@ div_bruta_total = obtendo_expectativas('Dívida bruta do governo geral', entidad
 def unindo_gov(x):
     
     # Selecionando trimestres
-    anos = ['2022', '2023']
+    anos = ['2023', '2024']
     
     x = x[x['DataReferencia'].isin(anos)]
     
@@ -139,9 +139,9 @@ fig_primario = px.bar(primario_df, x = 'Anos', y = 'Valor', color = 'Métrica', 
                         color_discrete_sequence = ['#560699', '#080699', '#E41006'], template = 'plotly_white')
 
 fig_primario.update_layout(title = '<br><sup>Valores em Porcentagem do PIB</sup>', title_x = 0.0, xaxis_title = '', yaxis_title = '',
-                           legend_title = 'Métricas', yaxis = dict(dtick = 0.3))
+                           legend_title = 'Métricas', yaxis = dict(dtick = 0.5))
 
-fig_primario.update_yaxes(range = (-1.5, 1.5), constrain = 'domain', ticksuffix = '%')
+fig_primario.update_yaxes(range = (-3, 1.5), constrain = 'domain', ticksuffix = '%')
 # Finalizado Resultado Primario #
 
 # Resultado Nominal #
@@ -154,7 +154,7 @@ fig_nominal = px.bar(nominal_df, x = 'Anos', y = 'Valor', color = 'Métrica', ba
 fig_nominal.update_layout(title = '<br><sup>Valores em Porcentagem do PIB</sup>', title_x = 0.0, xaxis_title = '', yaxis_title = '',
                            legend_title = 'Métricas', yaxis = dict(dtick = 1))
 
-fig_nominal.update_yaxes(range = (-10, 0), constrain = 'domain', ticksuffix = '%')
+fig_nominal.update_yaxes(range = (-12, 0), constrain = 'domain', ticksuffix = '%')
 # Finalizado Resultado Nominal #
 
 # Investimento Direto no Pais #
@@ -179,7 +179,7 @@ fig_conta = px.bar(conta_corrente_df, x = 'Anos', y = 'Valor', color = 'Métrica
 fig_conta.update_layout(title = '<br><sup>Valores em Bilhões</sup>', title_x = 0.0, xaxis_title = '', yaxis_title = '',
                            legend_title = 'Métricas')
 
-fig_conta.update_yaxes(range = (-60, 0), constrain = 'domain', tickprefix = 'R$')
+fig_conta.update_yaxes(range = (-90, 0), constrain = 'domain', tickprefix = 'R$')
 # Finalizado Conta Corrente #
 
 # Plot das Informacoes

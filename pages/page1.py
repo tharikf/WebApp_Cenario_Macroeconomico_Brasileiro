@@ -105,7 +105,7 @@ def obtendo_expectativas(indicador, entidade, respondentes):
 def unindo_prev(x):
     
     # Selecionando trimestres
-    trimestres = ['4/2022', '1/2023', '2/2023', '3/2023', '4/2023']
+    trimestres = ['1/2023', '2/2023', '3/2023', '4/2023', '1/2024', '2/2024']
     
     # Calculando as metricas
     dicio_metricas = {}
@@ -138,7 +138,7 @@ desemprego_total = obtendo_expectativas('Taxa de desocupação', entidade_anuais
 def unindo_desemprego(x):
     
     # Selecionando trimestres
-    anos = ['2022', '2023']
+    anos = ['2023', '2024']
     
     x = x[x['DataReferencia'].isin(anos)]
     
@@ -176,7 +176,7 @@ fig_prev_desemp_anual.update_yaxes(range = (0, 12), constrain = 'domain', ticksu
 # Finalizado Desemprego Anual
 
 # Desemprego Trimestral
-desemprego_total_tri = obtendo_expectativas('Taxa de desocupação', entidade_trimestrais, 30)
+desemprego_total_tri = obtendo_expectativas('Taxa de desocupação', entidade_trimestrais, 10)
 
 desemprego_total_tri_df = unindo_prev(desemprego_total_tri)
 
@@ -192,7 +192,7 @@ fig_prev_desemp_tri.update_yaxes(range = (0, 13), constrain = 'domain', ticksuff
 
 # PIB Trimestrais #
 # Pelo menos 30 respondentes!
-pib_total = obtendo_expectativas('PIB Total', entidade_trimestrais, 30)
+pib_total = obtendo_expectativas('PIB Total', entidade_trimestrais, 10)
 df_previsoes_pib = unindo_prev(pib_total)
 
 fig_prev_pib = px.bar(df_previsoes_pib, x = 'Trimestres', y = 'Valor', color = 'Métrica', barmode = 'group',
@@ -204,17 +204,9 @@ fig_prev_pib.update_yaxes(range = (-5, 5), constrain = 'domain', ticksuffix = '%
 
 # PIB Anual #
 # Pelo menos 30 respondentes!
-pib_total = obtendo_expectativas('PIB Total', entidade_anuais, 30)
-pib_2022_media = round(pib_total[pib_total['DataReferencia'] == '2022']['Media'].mean(), 2)
+pib_total = obtendo_expectativas('PIB Total', entidade_anuais, 10)
 pib_2023_media = round(pib_total[pib_total['DataReferencia'] == '2023']['Media'].mean(), 2)
-
-pib_2022_fig = go.Figure()
-pib_2022_fig.add_trace(go.Indicator(
-mode = 'number',
-number = {'suffix' : '%', 'valueformat' : '.2f'},
-value = pib_2022_media,
-title = 'PIB 2022',
-))
+pib_2024_media = round(pib_total[pib_total['DataReferencia'] == '2024']['Media'].mean(), 2)
 
 pib_2023_fig = go.Figure()
 pib_2023_fig.add_trace(go.Indicator(
@@ -223,22 +215,22 @@ number = {'suffix' : '%', 'valueformat' : '.2f'},
 value = pib_2023_media,
 title = 'PIB 2023',
 ))
+
+pib_2024_fig = go.Figure()
+pib_2024_fig.add_trace(go.Indicator(
+mode = 'number',
+number = {'suffix' : '%', 'valueformat' : '.2f'},
+value = pib_2024_media,
+title = 'PIB 2024',
+))
 # Finalizando PIB Anual #
 
 # PIB por setores #
 # Pelo menos 30 respondentes!
 # Agro
-pib_agro = obtendo_expectativas('PIB Agropecuária', entidade_anuais, 30)
-pib_2022_agro = round(pib_agro[pib_agro['DataReferencia'] == '2022']['Media'].mean(), 2)
+pib_agro = obtendo_expectativas('PIB Agropecuária', entidade_anuais, 10)
 pib_2023_agro = round(pib_agro[pib_agro['DataReferencia'] == '2023']['Media'].mean(), 2)
-
-pib_2022_agro_fig = go.Figure()
-pib_2022_agro_fig.add_trace(go.Indicator(
-mode = 'number',
-number = {'suffix' : '%', 'valueformat' : '.2f'},
-value = pib_2022_agro,
-title = 'PIB - Agropecuária: 2022',
-))
+pib_2024_agro = round(pib_agro[pib_agro['DataReferencia'] == '2024']['Media'].mean(), 2)
 
 pib_2023_agro_fig = go.Figure()
 pib_2023_agro_fig.add_trace(go.Indicator(
@@ -248,18 +240,18 @@ value = pib_2023_agro,
 title = 'PIB - Agropecuária: 2023',
 ))
 
-# Industria
-pib_ind = obtendo_expectativas('PIB Indústria', entidade_anuais, 30)
-pib_2022_ind = round(pib_ind[pib_ind['DataReferencia'] == '2022']['Media'].mean(), 2)
-pib_2023_ind = round(pib_ind[pib_ind['DataReferencia'] == '2023']['Media'].mean(), 2)
-
-pib_2022_ind_fig = go.Figure()
-pib_2022_ind_fig.add_trace(go.Indicator(
+pib_2024_agro_fig = go.Figure()
+pib_2024_agro_fig.add_trace(go.Indicator(
 mode = 'number',
 number = {'suffix' : '%', 'valueformat' : '.2f'},
-value = pib_2022_ind,
-title = 'PIB - Indústria: 2022',
+value = pib_2024_agro,
+title = 'PIB - Agropecuária: 2024',
 ))
+
+# Industria
+pib_ind = obtendo_expectativas('PIB Indústria', entidade_anuais, 10)
+pib_2023_ind = round(pib_ind[pib_ind['DataReferencia'] == '2023']['Media'].mean(), 2)
+pib_2024_ind = round(pib_ind[pib_ind['DataReferencia'] == '2024']['Media'].mean(), 2)
 
 pib_2023_ind_fig = go.Figure()
 pib_2023_ind_fig.add_trace(go.Indicator(
@@ -269,19 +261,19 @@ value = pib_2023_ind,
 title = 'PIB - Indústria: 2023',
 ))
 
-
-# Servicos
-pib_servicos = obtendo_expectativas('PIB Serviços', entidade_anuais, 30)
-pib_2022_serv = round(pib_servicos[pib_servicos['DataReferencia'] == '2022']['Media'].mean(), 2)
-pib_2023_serv = round(pib_servicos[pib_servicos['DataReferencia'] == '2023']['Media'].mean(), 2)
-
-pib_2022_serv_fig = go.Figure()
-pib_2022_serv_fig.add_trace(go.Indicator(
+pib_2024_ind_fig = go.Figure()
+pib_2024_ind_fig.add_trace(go.Indicator(
 mode = 'number',
 number = {'suffix' : '%', 'valueformat' : '.2f'},
-value = pib_2022_serv,
-title = 'PIB - Serviços: 2022',
+value = pib_2024_ind,
+title = 'PIB - Indústria: 2024',
 ))
+
+
+# Servicos
+pib_servicos = obtendo_expectativas('PIB Serviços', entidade_anuais, 10)
+pib_2023_serv = round(pib_servicos[pib_servicos['DataReferencia'] == '2023']['Media'].mean(), 2)
+pib_2024_serv = round(pib_servicos[pib_servicos['DataReferencia'] == '2024']['Media'].mean(), 2)
 
 pib_2023_serv_fig = go.Figure()
 pib_2023_serv_fig.add_trace(go.Indicator(
@@ -289,6 +281,14 @@ mode = 'number',
 number = {'suffix' : '%', 'valueformat' : '.2f'},
 value = pib_2023_serv,
 title = 'PIB - Serviços: 2023',
+))
+
+pib_2024_serv_fig = go.Figure()
+pib_2024_serv_fig.add_trace(go.Indicator(
+mode = 'number',
+number = {'suffix' : '%', 'valueformat' : '.2f'},
+value = pib_2024_serv,
+title = 'PIB - Serviços: 2024',
 ))
 
 # Finalizando PIB por setores #
@@ -300,14 +300,14 @@ desemp_anual = [
         [
             dbc.Tab(
                 dbc.CardBody(
-                    dcc.Graph(id = 'desemp-2022',
+                    dcc.Graph(id = 'desemp-2023',
                                 figure = fig_prev_desemp_anual,
                                 style = {'height' : 360, 'width' : 800}),
         ), label = 'Desemprego Anual'
             ),
             dbc.Tab(
                 dbc.CardBody(
-                    dcc.Graph(id = 'desemp-2023',
+                    dcc.Graph(id = 'desemp-2024',
                                 figure = fig_prev_desemp_tri,
                                 style = {'height' : 360, 'width' : 800}),
         ), label = 'Desemprego Trimestral'
@@ -333,17 +333,17 @@ pib_anuais = [
         [
             dbc.Tab(
                 dbc.CardBody(
-                    dcc.Graph(id = 'pib-2022',
-                                figure = pib_2022_fig,
-                                style = {'height' : 300}),
-        ), label = 'Previsão PIB 2022'
-            ),
-            dbc.Tab(
-                dbc.CardBody(
                     dcc.Graph(id = 'pib-2023',
                                 figure = pib_2023_fig,
                                 style = {'height' : 300}),
         ), label = 'Previsão PIB 2023'
+            ),
+            dbc.Tab(
+                dbc.CardBody(
+                    dcc.Graph(id = 'pib-2024',
+                                figure = pib_2024_fig,
+                                style = {'height' : 300}),
+        ), label = 'Previsão PIB 2024'
             ),
         ]
     )
@@ -355,17 +355,17 @@ pib_agropec = [
         [
             dbc.Tab(
                 dbc.CardBody(
-                    dcc.Graph(id = 'pib-agropec-2022',
-                                figure = pib_2022_agro_fig,
-                                style = {'height' : 300}),
-        ), label = 'Agropecuária - 2022'
-            ),
-            dbc.Tab(
-                dbc.CardBody(
                     dcc.Graph(id = 'pib-agropec-2023',
                                 figure = pib_2023_agro_fig,
                                 style = {'height' : 300}),
         ), label = 'Agropecuária - 2023'
+            ),
+            dbc.Tab(
+                dbc.CardBody(
+                    dcc.Graph(id = 'pib-agropec-2024',
+                                figure = pib_2024_agro_fig,
+                                style = {'height' : 300}),
+        ), label = 'Agropecuária - 2024'
             ),
         ]
     )
@@ -377,17 +377,17 @@ pib_indust = [
         [
             dbc.Tab(
                 dbc.CardBody(
-                    dcc.Graph(id = 'pib-industria-2022',
-                                figure = pib_2022_ind_fig,
-                                style = {'height' : 300}),
-        ), label = 'Indústria - 2022'
-            ),
-            dbc.Tab(
-                dbc.CardBody(
                     dcc.Graph(id = 'pib-industria-2023',
                                 figure = pib_2023_ind_fig,
                                 style = {'height' : 300}),
         ), label = 'Indústria - 2023'
+            ),
+            dbc.Tab(
+                dbc.CardBody(
+                    dcc.Graph(id = 'pib-industria-2024',
+                                figure = pib_2024_ind_fig,
+                                style = {'height' : 300}),
+        ), label = 'Indústria - 2024'
             ),
         ]
     )
@@ -399,17 +399,17 @@ pib_servic = [
         [
             dbc.Tab(
                 dbc.CardBody(
-                    dcc.Graph(id = 'pib-servic-2022',
-                                figure = pib_2022_serv_fig,
-                                style = {'height' : 300}),
-        ), label = 'Serviços - 2022'
-            ),
-            dbc.Tab(
-                dbc.CardBody(
                     dcc.Graph(id = 'pib-servic-2023',
                                 figure = pib_2023_serv_fig,
                                 style = {'height' : 300}),
         ), label = 'Serviços - 2023'
+            ),
+            dbc.Tab(
+                dbc.CardBody(
+                    dcc.Graph(id = 'pib-servic-2024',
+                                figure = pib_2024_serv_fig,
+                                style = {'height' : 300}),
+        ), label = 'Serviços - 2024'
             ),
         ]
     )

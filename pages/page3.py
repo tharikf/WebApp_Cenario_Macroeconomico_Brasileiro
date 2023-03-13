@@ -100,7 +100,7 @@ cambio_total = obtendo_expectativas('Câmbio', entidade_anuais, 30)
 def unindo_cambio(x):
     
     # Selecionando trimestres
-    anos = ['2022', '2023']
+    anos = ['2023', '2024']
     
     x = x[x['DataReferencia'].isin(anos)]
     
@@ -143,7 +143,7 @@ cambio_trim = obtendo_expectativas('Câmbio', entidade_trimestrais, 30)
 def unindo_cambio_tri(x):
     
     # Selecionando trimestres
-    trimestres = ['4/2022', '1/2023', '2/2023', '3/2023', '4/2023']
+    trimestres = ['1/2023', '2/2023', '3/2023', '4/2023', '1/2024', '2/2024']
     
     # Calculando as metricas
     dicio_metricas = {}
@@ -199,7 +199,7 @@ comercio_total = obtendo_expectativas_comercio('Balança comercial', entidade_an
 def unindo_bc(x, detalhe):
     
     # Selecionando trimestres
-    anos = ['2022', '2023']
+    anos = ['2023', '2024']
     
     x = x[x['DataReferencia'].isin(anos)]
     x = x[x['IndicadorDetalhe'] == detalhe]
